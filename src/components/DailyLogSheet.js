@@ -1,4 +1,3 @@
-
 const DailyLogSheet = ({ dayLog }) => {
   const statusColors = {
     off_duty: "bg-gray-200 text-gray-800",
@@ -14,26 +13,34 @@ const DailyLogSheet = ({ dayLog }) => {
     on_duty_not_driving: "On Duty (Not Driving)",
   };
 
-  const generateTimeGrid = () => {
-    const hours = Array.from({ length: 24 }, (_, i) => i);
-    const entries = dayLog.entries || [];
+    const generateTimeGrid = () => {
+      const hours = Array.from({ length: 24 }, (_, i) => i);
+      const entries = (dayLog.segments || []).map((s) => ({
+        
+        start_time: s.start_time,
+        end_time: s.end_time,
+        duty_status: s.status,
+        remarks: s.note || "",
+      }));
+      
 
-    return hours.map((hour) => {
-      const hourString = hour.toString().padStart(2, "0") + ":00";
-      const entry = entries.find((e) => {
-        const startHour = parseInt(e.start_time.split(":")[0]);
-        const endHour = parseInt(e.end_time.split(":")[0]);
-        return hour >= startHour && hour < endHour;
+      return hours.map((hour) => {
+        const hourString = hour.toString().padStart(2, "0") + ":00";
+
+        const entry = entries.find((e) => {
+          const startHour = parseInt(e.start_time.split(":")[0], 10);
+          const endHour = parseInt(e.end_time.split(":")[0], 10);
+          return hour >= startHour && hour < endHour;
+        });
+
+        return {
+          hour: hourString,
+          status: entry?.duty_status || "off_duty",
+          location: entry?.location || "",
+          remarks: entry?.remarks || "",
+        };
       });
-
-      return {
-        hour: hourString,
-        status: entry?.duty_status || "off_duty",
-        location: entry?.location || "",
-        remarks: entry?.remarks || "",
-      };
-    });
-  };
+    };
 
   const timeGrid = generateTimeGrid();
 
@@ -97,8 +104,6 @@ const DailyLogSheet = ({ dayLog }) => {
         </div>
       </div>
 
-      
-
       {/* Detailed Log Entries */}
       <div>
         <h4 className="text-lg font-semibold mb-3">Detailed Log Entries</h4>
@@ -108,13 +113,12 @@ const DailyLogSheet = ({ dayLog }) => {
               <tr className="bg-gray-50">
                 <th className="px-3 py-2 text-left">Time Period</th>
                 <th className="px-3 py-2 text-left">Duty Status</th>
-                <th className="px-3 py-2 text-left">Location</th>
                 <th className="px-3 py-2 text-left">Duration</th>
                 <th className="px-3 py-2 text-left">Remarks</th>
               </tr>
             </thead>
             <tbody>
-              {(dayLog.entries || []).map((entry, index) => (
+              {(dayLog.segments || []).map((entry, index) => (
                 <tr key={index} className="border-t border-gray-200">
                   <td className="px-3 py-2 font-mono">
                     {entry.start_time} - {entry.end_time}
@@ -122,15 +126,18 @@ const DailyLogSheet = ({ dayLog }) => {
                   <td className="px-3 py-2">
                     <span
                       className={`px-2 py-1 rounded-full text-xs ${
-                        statusColors[entry.duty_status]
+                        statusColors[entry.status]
                       }`}
                     >
-                      {statusLabels[entry.duty_status]}
+                      {statusLabels[entry.status]}
                     </span>
                   </td>
-                  <td className="px-3 py-2 text-gray-700">{entry.location}</td>
-                  <td className="px-3 py-2 font-mono">{entry.duration}h</td>
-                  <td className="px-3 py-2 text-gray-600">{entry.remarks}</td>
+                  <td className="px-3 py-2 font-mono">
+                    {entry.duration_hours.toFixed(2)}h
+                  </td>
+                  <td className="px-3 py-2 text-gray-600">
+                    {entry.note || "-"}
+                  </td>
                 </tr>
               ))}
             </tbody>

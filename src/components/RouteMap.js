@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 const RouteMap = ({ route }) => {
   const mapRef = useRef(null);
@@ -7,9 +7,7 @@ const RouteMap = ({ route }) => {
   useEffect(() => {
     if (!route || !mapRef.current) return;
 
-    // Initialize map if not already done
     if (!mapInstanceRef.current) {
-      // Using Leaflet for the map
       const L = window.L;
       mapInstanceRef.current = L.map(mapRef.current).setView([39.8283, -98.5795], 4);
       
@@ -21,14 +19,12 @@ const RouteMap = ({ route }) => {
     const L = window.L;
     const map = mapInstanceRef.current;
 
-    // Clear existing layers
     map.eachLayer((layer) => {
       if (!layer._url) {
         map.removeLayer(layer);
       }
     });
 
-    // Add waypoint markers
     const waypoints = route.waypoints || [];
     const bounds = L.latLngBounds();
 
@@ -40,7 +36,6 @@ const RouteMap = ({ route }) => {
       marker.bindPopup(`<b>${waypoint.name}</b><br/>Stop ${index + 1}`);
     });
 
-    // Draw route if geometry exists
     if (route.geometry && route.geometry.coordinates) {
       const coordinates = route.geometry.coordinates.map(coord => [coord[1], coord[0]]);
       L.polyline(coordinates, {
@@ -52,7 +47,6 @@ const RouteMap = ({ route }) => {
       coordinates.forEach(coord => bounds.extend(coord));
     }
 
-    // Fit map to show all points
     if (bounds.isValid()) {
       map.fitBounds(bounds, { padding: [20, 20] });
     }

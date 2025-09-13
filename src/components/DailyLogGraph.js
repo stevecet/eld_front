@@ -1,5 +1,3 @@
-import React from "react";
-
 const statusOrder = [
   "off_duty",
   "sleeper_berth",
@@ -15,10 +13,10 @@ const statusLabels = {
 };
 
 const statusColors = {
-  off_duty: "#60a5fa", // blue
-  sleeper_berth: "#a78bfa", // purple
-  driving: "#f87171", // red
-  on_duty_not_driving: "#fbbf24", // amber
+  off_duty: "#60a5fa",
+  sleeper_berth: "#a78bfa", 
+  driving: "#f87171", 
+  on_duty_not_driving: "#fbbf24", 
 };
 
 function timeToX(timeStr, width) {

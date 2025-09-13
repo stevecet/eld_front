@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import TripForm from "./components/TripForm";
 import RouteMap from "./components/RouteMap";
 import LogSheets from "./components/LogSheets";
@@ -31,7 +31,6 @@ function App() {
       }
 
       const data = await response.json();
-      console.log(data)
       setTripData(data);
     } catch (err) {
       setError("Error planning trip. Please try again.");

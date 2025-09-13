@@ -1,7 +1,6 @@
 import DailyLogSheet from './DailyLogSheet';
 
 const LogSheets = ({ dailyLogs }) => {
-  console.log(dailyLogs)
   if (!dailyLogs || dailyLogs.length === 0) return null;
 
   return (

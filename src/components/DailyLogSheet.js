@@ -1,5 +1,4 @@
 
-
 const DailyLogSheet = ({ dayLog }) => {
   const statusColors = {
     off_duty: "bg-gray-200 text-gray-800",

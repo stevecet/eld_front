@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import TripForm from './components/TripForm';
-import RouteMap from './components/RouteMap';
-import LogSheets from './components/LogSheets';
-import LoadingSpinner from './components/LoadingSpinner';
-import './App.css';
+import React, { useState } from "react";
+import TripForm from "./components/TripForm";
+import RouteMap from "./components/RouteMap";
+import LogSheets from "./components/LogSheets";
+import LoadingSpinner from "./components/LoadingSpinner";
+import "./App.css";
 
 function App() {
   const [tripData, setTripData] = useState(null);
@@ -13,25 +13,29 @@ function App() {
   const handleTripSubmit = async (formData) => {
     setLoading(true);
     setError(null);
-    
+
     try {
-      const response = await fetch('http://localhost:8000/api/plan-trip/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      
+      const response = await fetch(
+        "https://eld-back-i14v.onrender.com/api/plan-trip/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
       if (!response.ok) {
-        throw new Error('Failed to plan trip');
+        throw new Error("Failed to plan trip");
       }
-      
+
       const data = await response.json();
+      console.log(data)
       setTripData(data);
     } catch (err) {
-      setError('Error planning trip. Please try again.');
-      console.error('Error:', err);
+      setError("Error planning trip. Please try again.");
+      console.error("Error:", err);
     } finally {
       setLoading(false);
     }
@@ -57,8 +61,16 @@ function App() {
         {error && (
           <div className="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">
             <div className="flex items-center">
-              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              <svg
+                className="w-5 h-5 mr-2"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                  clipRule="evenodd"
+                />
               </svg>
               {error}
             </div>
@@ -83,7 +95,7 @@ function App() {
                 Plan New Trip
               </button>
             </div>
-            
+
             <RouteMap route={tripData.route} />
             <LogSheets dailyLogs={tripData.daily_logs} />
           </div>
